@@ -37,7 +37,9 @@ endif
 # QTI Common Components
 
 ifneq (,$(filter adreno, $(TARGET_COMMON_QTI_COMPONENTS)))
-  ifeq ($(call is-board-platform-in-list,$(5_15_FAMILY)),true)
+  ifeq ($(call is-board-platform-in-list,$(6_1_FAMILY)),true)
+    TARGET_ADRENO_COMPONENT_VARIANT ?= adreno-u
+  else ifeq ($(call is-board-platform-in-list,$(5_15_FAMILY)),true)
     TARGET_ADRENO_COMPONENT_VARIANT ?= adreno-t
   else ifeq ($(call is-board-platform-in-list,$(5_10_FAMILY)),true)
     TARGET_ADRENO_COMPONENT_VARIANT ?= adreno-s
@@ -122,6 +124,7 @@ endif
 
 ifneq (,$(filter overlay, $(TARGET_COMMON_QTI_COMPONENTS)))
   include $(QCOM_COMMON_PATH)/system/overlay/qti-overlay.mk
+  include $(QCOM_COMMON_PATH)/vendor/overlay/qti-overlay.mk
 endif
 
 ifneq (,$(filter perf, $(TARGET_COMMON_QTI_COMPONENTS)))

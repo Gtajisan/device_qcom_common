@@ -1,4 +1,4 @@
-# Copyright 2022 Paranoid Android
+# Copyright 2023 Paranoid Android
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -84,6 +84,9 @@ ifeq ($(TARGET_FWK_SUPPORTS_FULL_VALUEADDS),true)
 include vendor/qcom/opensource/core-utils/build/utils.mk
 endif
 
+6_1_FAMILY := \
+    pineapple
+
 # Kernel Families
 5_15_FAMILY := \
     crow \
@@ -123,7 +126,9 @@ endif
     msm8937 \
     msm8996
 
-ifeq ($(call is-board-platform-in-list,$(5_15_FAMILY)),true)
+ifeq ($(call is-board-platform-in-list,$(6_1_FAMILY)),true)
+TARGET_KERNEL_VERSION ?= 6.1
+else ifeq ($(call is-board-platform-in-list,$(5_15_FAMILY)),true)
 TARGET_KERNEL_VERSION ?= 5.15
 else ifeq ($(call is-board-platform-in-list,$(5_10_FAMILY)),true)
 TARGET_KERNEL_VERSION ?= 5.10
@@ -150,6 +155,9 @@ DEVICE_MATRIX_FILE += \
 DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE += \
     vendor/qcom/opensource/core-utils/vendor_framework_compatibility_matrix.xml
 
+DEVICE_FRAMEWORK_MANIFEST_FILE += \
+    device/qcom/qssi/framework_manifest.xml
+
 PRODUCT_VENDOR_PROPERTIES += ro.vendor.qti.va_aosp.support=1
 PRODUCT_ODM_PROPERTIES += ro.vendor.qti.va_odm.support=1
 endif
@@ -162,6 +170,10 @@ include $(QCOM_COMMON_PATH)/components.mk
 
 # Filesystem
 TARGET_FS_CONFIG_GEN += $(QCOM_COMMON_PATH)/config.fs
+
+# GPS
+PRODUCT_PACKAGES += \
+    libcurl
 
 # Partition source order for Product/Build properties pickup.
 PRODUCT_SYSTEM_PROPERTIES += \
@@ -212,5 +224,9 @@ PRODUCT_PACKAGES += \
 # SoC
 PRODUCT_VENDOR_PROPERTIES += \
     ro.soc.manufacturer=QTI
+
+# WiFi Display
+PRODUCT_PACKAGES += \
+    libwfdaac_vendor
 
 endif # QCOM_BOARD_PLATFORMS
