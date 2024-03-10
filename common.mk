@@ -155,9 +155,6 @@ DEVICE_MATRIX_FILE += \
 DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE += \
     vendor/qcom/opensource/core-utils/vendor_framework_compatibility_matrix.xml
 
-DEVICE_FRAMEWORK_MANIFEST_FILE += \
-    device/qcom/qssi/framework_manifest.xml
-
 PRODUCT_VENDOR_PROPERTIES += ro.vendor.qti.va_aosp.support=1
 PRODUCT_ODM_PROPERTIES += ro.vendor.qti.va_odm.support=1
 endif
