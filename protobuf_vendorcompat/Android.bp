@@ -1,16 +1,5 @@
-package {
-    default_applicable_licenses: ["lineage_compat_protobuf_vendorcompat_license"],
-}
-
-// See: http://go/android-license-faq
-license {
-    name: "lineage_compat_protobuf_vendorcompat_license",
-    license_kinds: ["SPDX-license-identifier-BSD"],
-    license_text: ["LICENSE"],
-}
-
 cc_prebuilt_library_shared {
-    name: "libprotobuf-cpp-lite-3.9.1-vendorcompat",
+    name: "libprotobuf-cpp-lite-3.9.1-vendorcompat-new",
     stem: "libprotobuf-cpp-lite-3.9.1",
     vendor: true,
     target: {
