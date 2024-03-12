@@ -148,22 +148,16 @@ endif
 
 ifeq ($(call is-board-platform-in-list,$(QCOM_BOARD_PLATFORMS)),true)
 ifeq ($(TARGET_FWK_SUPPORTS_FULL_VALUEADDS),true)
+DEVICE_FRAMEWORK_MANIFEST_FILE += \
+    $(QCOM_COMMON_PATH)/configs/hidl/framework_manifest.xml
+
 # Compatibility matrix
 DEVICE_MATRIX_FILE += \
     $(QCOM_COMMON_PATH)/configs/hidl/compatibility_matrix.xml
 
-DEVICE_FRAMEWORK_MANIFEST_FILE += \
-    $(QCOM_COMMON_PATH)/configs/hidl/framework_manifest.xml
-
 DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE += \
     vendor/qcom/opensource/core-utils/vendor_framework_compatibility_matrix.xml
-
-PRODUCT_VENDOR_PROPERTIES += ro.vendor.qti.va_aosp.support=1
-PRODUCT_ODM_PROPERTIES += ro.vendor.qti.va_odm.support=1
 endif
-
-# Opt out of 16K alignment changes
-PRODUCT_MAX_PAGE_SIZE_SUPPORTED ?= 4096
 
 # Components
 include $(QCOM_COMMON_PATH)/components.mk
@@ -171,13 +165,16 @@ include $(QCOM_COMMON_PATH)/components.mk
 # Filesystem
 TARGET_FS_CONFIG_GEN += $(QCOM_COMMON_PATH)/config.fs
 
-# GPS
-PRODUCT_PACKAGES += \
-    libcurl
+# Opt out of 16K alignment changes
+PRODUCT_MAX_PAGE_SIZE_SUPPORTED ?= 4096
 
-# Partition source order for Product/Build properties pickup.
-PRODUCT_SYSTEM_PROPERTIES += \
-    ro.product.property_source_order=odm,vendor,product,system_ext,system
+# Permissions
+PRODUCT_COPY_FILES += \
+    $(QCOM_COMMON_PATH)/configs/privapp-permissions-qti.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/privapp-permissions-qti.xml \
+    $(QCOM_COMMON_PATH)/configs/privapp-permissions-qti-system-ext.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/permissions/privapp-permissions-qti-system-ext.xml \
+    $(QCOM_COMMON_PATH)/configs/qti_whitelist.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/sysconfig/qti_whitelist.xml \
+    $(QCOM_COMMON_PATH)/configs/qti_whitelist_system_ext.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/sysconfig/qti_whitelist_system_ext.xml \
+    frameworks/native/data/etc/android.software.ipsec_tunnel_migration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.ipsec_tunnel_migration.xml
 
 # Public Libraries
 PRODUCT_COPY_FILES += \
@@ -191,13 +188,19 @@ PRODUCT_COPY_FILES += \
     $(QCOM_COMMON_PATH)/vendor/seccomp/mediacodec-seccomp.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediacodec.policy \
     $(QCOM_COMMON_PATH)/vendor/seccomp/mediaextractor-seccomp.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediaextractor.policy
 
-# Permissions
-PRODUCT_COPY_FILES += \
-    $(QCOM_COMMON_PATH)/configs/privapp-permissions-qti.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/privapp-permissions-qti.xml \
-    $(QCOM_COMMON_PATH)/configs/privapp-permissions-qti-system-ext.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/permissions/privapp-permissions-qti-system-ext.xml \
-    $(QCOM_COMMON_PATH)/configs/qti_whitelist.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/sysconfig/qti_whitelist.xml \
-    $(QCOM_COMMON_PATH)/configs/qti_whitelist_system_ext.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/sysconfig/qti_whitelist_system_ext.xml \
-    frameworks/native/data/etc/android.software.ipsec_tunnel_migration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.ipsec_tunnel_migration.xml
+# EGL blobcache configuration
+PRODUCT_SYSTEM_EXT_PROPERTIES += \
+    ro.egl.blobcache.multifile=true \
+    ro.egl.blobcache.multifile_limit=33554432
+
+# Exfat FS
+PRODUCT_PACKAGES += \
+    fsck.exfat \
+    mkfs.exfat
+
+# GPS
+PRODUCT_PACKAGES += \
+    libcurl
 
 # HIDL
 PRODUCT_PACKAGES += \
@@ -210,6 +213,15 @@ PRODUCT_PACKAGES += \
     libhwbinder.vendor \
     android.hidl.allocator@1.0.vendor
 
+# Partition source order for Product/Build properties pickup.
+PRODUCT_SYSTEM_PROPERTIES += \
+    ro.product.property_source_order=odm,vendor,product,system_ext,system
+
+# Protobuf
+PRODUCT_PACKAGES += \
+    libprotobuf-cpp-full-3.9.1-vendorcompat \
+    libprotobuf-cpp-lite-3.9.1-vendorcompat-new
+
 # QTI framework detect
 PRODUCT_PACKAGES += \
     libqti_vndfwk_detect \
@@ -217,20 +229,12 @@ PRODUCT_PACKAGES += \
     libvndfwk_detect_jni.qti \
     libvndfwk_detect_jni.qti.vendor
 
-# EGL - Blobcache configuration
-PRODUCT_SYSTEM_EXT_PROPERTIES += \
-    ro.egl.blobcache.multifile=true \
-    ro.egl.blobcache.multifile_limit=33554432
+# QTI VA
+PRODUCT_VENDOR_PROPERTIES += \
+    ro.vendor.qti.va_aosp.support=1
 
-# Exfat FS
-PRODUCT_PACKAGES += \
-    fsck.exfat \
-    mkfs.exfat
-
-# Protobuf
-PRODUCT_PACKAGES += \
-    libprotobuf-cpp-full-3.9.1-vendorcompat \
-    libprotobuf-cpp-lite-3.9.1-vendorcompat-new
+PRODUCT_ODM_PROPERTIES += \
+    ro.vendor.qti.va_odm.support=1
 
 # Sensors
 PRODUCT_PACKAGES += \
