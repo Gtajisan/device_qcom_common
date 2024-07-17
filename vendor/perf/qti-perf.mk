@@ -43,7 +43,8 @@ PRODUCT_PACKAGES += \
     libavservices_minijail.vendor \
     libpsi.vendor \
     libtflite \
-    vendor.qti.hardware.servicetracker@1.2.vendor
+    vendor.qti.hardware.servicetracker@1.1.vendor \
+    vendor.qti.hardware.servicetrackeraidl-V1-ndk.vendor
 
 PRODUCT_PACKAGES += \
     BoostFrameworkOverlay
@@ -60,8 +61,6 @@ PRODUCT_VENDOR_PROPERTIES += \
     ro.vendor.extension_library=libqti-perfd-client.so \
     ro.vendor.perf.scroll_opt=true \
     ro.vendor.qspm.enable=true \
-    vendor.power.pasr.enabled=false \
-    vendor.pasr.activemode.enabled=false \
     vendor.perf.framepacing.enable=1
 
 ifneq (,$(filter 4.19 5.4 5.10 5.15, $(TARGET_KERNEL_VERSION)))
