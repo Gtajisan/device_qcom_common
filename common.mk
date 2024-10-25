@@ -251,8 +251,5 @@ PRODUCT_PACKAGES += \
     libtextclassifier_actions_suggestions_universal_model \
     libtextclassifier_lang_id_model
 
-# WiFi Display
-PRODUCT_PACKAGES += \
-    libwfdaac_vendor
 
 endif # QCOM_BOARD_PLATFORMS
